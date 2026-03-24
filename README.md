@@ -1,41 +1,31 @@
 # code-analyzer
 
-**Versione**: 1.5.0 · **Licenza**: MIT · **Standard**: [Agent Skills](https://agentskills.io)
+**Version**: 1.5.0 · **License**: MIT · **Standard**: [Agent Skills](https://agentskills.io)
 
-Skill per agenti AI di coding che analizza in profondità qualsiasi file sorgente o snippet di codice. Spiega cosa fa il codice, documenta ogni funzione, rileva bug, verifica le dipendenze su internet, genera diagrammi UML e schemi di database, e produce metriche di qualità — tutto salvato automaticamente in una directory con timestamp.
-
----
-## Installazione
-
-### Metodo rapido (npx)
-npx skills add Aldo-Forte/code-analyzer --all
-
-### Git clone (con aggiornamenti automatici)
-git clone https://github.com/Aldo-Forte/code-analyzer ~/.claude/skills/code-analyzer
-chmod +x ~/.claude/skills/code-analyzer/scripts/*.sh
+Skill for AI coding agents that deeply analyzes any source file or code snippet. Explains what the code does, documents every function, detects bugs, verifies dependencies online, generates UML diagrams and database schemas, and produces quality metrics — all automatically saved in a timestamped directory.
 
 ---
 
-## Output prodotti
+## Output files
 
-Ogni analisi crea una sottodirectory timestampata `code-analyzer/YYYY-MM-DDTHH:MM:SS-Report/` contenente:
+Each analysis creates a timestamped subdirectory `code-analyzer/YYYY-MM-DDTHH-MM-SS-Report/` containing:
 
-| File | Contenuto |
+| File | Contents |
 |---|---|
-| `analysis.md` | Report completo: panoramica, analisi componenti, verifica API, bug, pattern architetturali, metriche, fonti |
-| `summary.md` | Scheda sintetica: cosa fa il codice, input/output di ogni funzione, esempi realistici con casi limite |
-| `uml-schema.md` | Diagramma UML Mermaid `classDiagram` con classi, interfacce, relazioni e visibilità *(se rilevate)* |
-| `database-schema.md` | Schema ER Mermaid `erDiagram` con tabelle, campi, PK, FK e relazioni *(se rilevate)* |
-| `requirements_python.txt` | Dipendenze estratte dal virtual environment *(se presente)* |
-| `requirements_typescript.txt` | Dipendenze da `package.json` e versioni installate *(se presente)* |
+| `analysis.md` | Full report: overview, component analysis, API check, bugs, architectural patterns, metrics, sources |
+| `summary.md` | Quick-reference card: what the code does, input/output of each function, realistic examples with edge cases |
+| `uml-schema.md` | Mermaid `classDiagram` UML diagram with classes, interfaces, relationships and visibility *(if detected)* |
+| `database-schema.md` | Mermaid `erDiagram` ER schema with tables, fields, PK, FK and relations *(if detected)* |
+| `requirements_python.txt` | Dependencies extracted from the virtual environment *(if present)* |
+| `requirements_typescript.txt` | Dependencies from `package.json` and installed versions *(if present)* |
 
 ---
 
-## Compatibilità
+## Compatibility
 
-Segue lo **standard aperto [Agent Skills](https://agentskills.io)** — funziona su tutti i principali agenti AI:
+Follows the **open [Agent Skills](https://agentskills.io) standard** — works on all major AI agents:
 
-| Agente | Istruzioni | Script bash |
+| Agent | Instructions | Scripts |
 |---|---|---|
 | **OpenAI Codex CLI** | X | X |
 | **Claude Code** | X | X |
@@ -48,114 +38,237 @@ Segue lo **standard aperto [Agent Skills](https://agentskills.io)** — funziona
 | **Roo Code** | X | X |
 | **Amp** | X | X |
 
-Gli script bash (estrazione dipendenze da venv e node_modules) richiedono accesso alla shell locale. Su agenti senza shell, le versioni vengono verificate tramite ricerca internet.
+Scripts require Node.js (already bundled with most agents). If Node is unavailable, the skill still runs all 12 analysis steps — library versions are retrieved via web search instead of the local environment.
 
 ---
 
-## Installazione
+## Requirements
 
-### Metodo 1 — Manuale
+- **Node.js** v16+ (for the `.js` scripts — included in most agents)
+- **Git** (for installation via clone or npx)
+- Internet access (the skill searches online to verify library versions and APIs)
+
+---
+
+## Installation
+
+### Method 1 — Automatic script (recommended)
+
+Detects installed agents and copies the skill to the correct directories:
 
 ```bash
-# Estrai il pacchetto
-tar -xzf code-analyzer.tar.gz
-
-# Copia nella cartella skills del tuo agente
-cp -r code-analyzer ~/.codex/skills/             # OpenAI Codex
-cp -r code-analyzer ~/.claude/skills/            # Claude Code
-cp -r code-analyzer ~/.config/opencode/skills/   # OpenCode
-cp -r code-analyzer ~/.cursor/skills/            # Cursor
-cp -r code-analyzer ~/.windsurf/skills/          # Windsurf
-
-# Rendi eseguibili gli script (Linux/macOS)
-chmod +x <skills_dir>/code-analyzer/scripts/*.sh
-
-# Riavvia l'agente e verifica
-/skills
+git clone https://github.com/Aldo-Forte/code-analyzer
+cd code-analyzer
+bash install.sh
 ```
 
-### Metodo 2 — npx skills CLI
+Or in a single command, without cloning first:
 
 ```bash
-# Estrai prima il pacchetto
-tar -xzf code-analyzer.tar.gz
-
-# Installa su tutti gli agenti rilevati
-npx skills add ./code-analyzer --all
-
-# Oppure su agenti specifici
-npx skills add ./code-analyzer -a claude-code -a cursor -a codex
+curl -fsSL https://raw.githubusercontent.com/Aldo-Forte/code-analyzer/main/install.sh | bash
 ```
 
->  La struttura installata deve essere `<skills_dir>/code-analyzer/SKILL.md` — non un livello annidato in più.
+Options:
+
+```bash
+bash install.sh                         # install on all detected agents
+bash install.sh --agent claude-code     # Claude Code only
+bash install.sh --agent codex           # Codex CLI only
+bash install.sh --list                  # show detected agents and paths
+bash install.sh --uninstall             # remove from all agents
+```
+
+Supported agent names: `claude-code`, `codex`, `opencode`, `cursor`, `windsurf`, `gemini`, `goose`, `agents`.
+
+### Method 2 — npx skills CLI
+
+```bash
+npx skills add Aldo-Forte/code-analyzer --all
+```
+
+### Method 3 — Manual git clone
+
+```bash
+# Claude Code
+git clone https://github.com/Aldo-Forte/code-analyzer ~/.claude/skills/code-analyzer
+
+# Codex CLI
+git clone https://github.com/Aldo-Forte/code-analyzer ~/.codex/skills/code-analyzer
+
+# Cursor
+git clone https://github.com/Aldo-Forte/code-analyzer ~/.cursor/skills/code-analyzer
+
+# OpenCode
+git clone https://github.com/Aldo-Forte/code-analyzer ~/.config/opencode/skills/code-analyzer
+```
+
+With git clone, future updates are a single command run inside the installed directory:
+
+```bash
+git -C ~/.claude/skills/code-analyzer pull
+```
 
 ---
 
-## Utilizzo
+## Usage
 
-**Invocazione esplicita** (digita `$` seguito dal nome skill):
+**Explicit invocation** (type `$` followed by the skill name):
+
 ```
-$code-analyzer analizza src/app.py
-$code-analyzer analizza il progetto in /home/user/myapp
-$code-analyzer cosa fa questo codice: <incolla snippet>
+$code-analyzer analyze src/app.py
+$code-analyzer analyze the project at /home/user/myapp
+$code-analyzer what does this code do: <paste snippet>
 ```
 
-**Invocazione implicita** — l'agente attiva la skill automaticamente con frasi come:
-- *"spiegami questo codice"*
-- *"analizza questo file"*
-- *"cosa fa questa funzione?"*
-- *"che librerie usa?"*
-- *"è corretto questo codice?"*
-- *"ci sono bug qui?"*
+**Implicit invocation** — the agent activates the skill automatically with phrases like:
+
+- *"explain this code"*
+- *"analyze this file"*
+- *"what does this function do?"*
+- *"what libraries does it use?"*
+- *"is this code correct?"*
+- *"are there any bugs here?"*
 
 ---
 
-## I 12 passi di analisi
+## The 12 analysis steps
 
-| Passo | Cosa fa |
+| Step | What it does |
 |---|---|
-| **1** | Rileva il linguaggio — supporta progetti misti Python + TypeScript |
-| **1b** | Estrae le dipendenze dal venv Python o da `node_modules` |
-| **2** | Panoramica: scopo, pattern architetturale, dimensione, complessità |
-| **3** | Tabella librerie: versione installata vs attuale (verificata online) con stato aggiornamento |
-| **4** | Analisi dettagliata di ogni funzione/classe: input, output, logica interna |
-| **5** | Verifica correttezza API e librerie esterne su internet |
-| **6** | Bug rilevati con impatto e riproduzione + parti poco chiare |
-| **7** | Suggerimenti architetturali consultivi: pattern applicabili e anti-pattern |
-| **8** | Metriche di qualità: complessità ciclomatica, nesting, type hints, `any`, `var`… |
-| **9** | Riepilogo in 3 frasi + tabella completa delle fonti consultate su internet |
-| **10** | `summary.md` sintetico con esempi e casi limite per ogni funzione |
-| **11** | `uml-schema.md` — diagramma Mermaid `classDiagram` *(se classi/interfacce rilevate)* |
-| **12** | `database-schema.md` — schema Mermaid `erDiagram` con PK, FK e relazioni *(se tabelle rilevate)* |
+| **1** | Detects the language — supports mixed Python + TypeScript projects |
+| **1b** | Extracts dependencies from the Python venv or `node_modules` |
+| **2** | Overview: purpose, architectural pattern, size, complexity |
+| **3** | Library table: installed vs current version (verified online) with update status |
+| **4** | Detailed analysis of each function/class: input, output, internal logic |
+| **5** | Verifies API and external library correctness online |
+| **6** | Detected bugs with impact and reproduction steps + unclear parts |
+| **7** | Advisory architectural suggestions: applicable patterns and anti-patterns |
+| **8** | Quality metrics: cyclomatic complexity, nesting, type hints, `any`, `var`… |
+| **9** | 3-sentence summary + complete table of all sources consulted online |
+| **10** | `summary.md` quick-reference with examples and edge cases per function |
+| **11** | `uml-schema.md` — Mermaid `classDiagram` *(if classes/interfaces detected)* |
+| **12** | `database-schema.md` — Mermaid `erDiagram` with PK, FK and relations *(if tables detected)* |
 
 ---
 
-## Linguaggi supportati
+## Supported languages
 
-Qualsiasi linguaggio per l'analisi. Estrazione automatica delle dipendenze per:
+Any language for code analysis. Automatic dependency extraction for:
 
-- **Python** — virtual environment (`.venv`, `venv`, `env`, `.env`, `virtualenv`), fallback su `requirements.txt` / `pyproject.toml`
-- **TypeScript / JavaScript** — `package.json` + `node_modules`, compatibile con **npm**, **Yarn v1**, **Yarn Berry (v2+)** e **pnpm**
+- **Python** — virtual environment (`.venv`, `venv`, `env`, `.env`, `virtualenv`), fallback to `requirements.txt` / `pyproject.toml`
+- **TypeScript / JavaScript** — `package.json` + `node_modules`, compatible with **npm**, **Yarn v1**, **Yarn Berry (v2+)** and **pnpm**
 
 ---
 
-## Struttura della skill
+## Troubleshooting
+
+### The skill does not create any files
+
+**Most common cause: the agent was not restarted after installation.**
+Close and reopen the agent completely, then try again.
+
+If the problem persists:
+1. Verify the skill is installed in the correct path — run `bash install.sh --list` or check manually:
+   ```bash
+   ls ~/.claude/skills/code-analyzer/SKILL.md    # Claude Code
+   ls ~/.codex/skills/code-analyzer/SKILL.md     # Codex
+   ```
+2. Make sure Node.js is available: `node --version`
+3. Try invoking the skill explicitly: `$code-analyzer analyze <your_file>`
+
+---
+
+### The skill is not recognized / not activating
+
+- **Restart the agent** — most agents load skills at startup only
+- **Check the installation path** — the structure must be exactly `<skills_dir>/code-analyzer/SKILL.md`, not a nested extra level
+- **Try explicit invocation**: type `$code-analyzer` or `/skills` to see what is loaded
+- If you used npx, verify with: `npx skills list`
+
+---
+
+### No `requirements_python.txt` or `requirements_typescript.txt` created
+
+These files are **optional** — they are only created when:
+- A Python virtual environment is found (`.venv`, `venv`, `env`, etc.)
+- A `package.json` with `node_modules` is found
+
+If your project has a venv but the file is not created:
+1. Make sure the venv is inside the project root
+2. Check that `pip` is present and executable: `ls .venv/bin/pip`
+3. Run the script manually to see the error:
+   ```bash
+   node ~/.claude/skills/code-analyzer/scripts/extract_requirements_python.js .
+   ```
+
+---
+
+### On Windows: scripts don't run
+
+The `.js` scripts require Node.js and work natively on Windows. If you get errors:
+
+1. **Check Node.js is installed**: open Command Prompt and run `node --version`
+2. **Install Node.js** if missing: [nodejs.org](https://nodejs.org) (LTS version recommended)
+3. **Run manually** to see the error:
+   ```cmd
+   node %USERPROFILE%\.claude\skills\code-analyzer\scripts\init_report_dir.js .
+   ```
+4. If the agent cannot run scripts at all, the skill still works for all 12 analysis steps — library versions will be retrieved via web search instead of the local environment.
+
+---
+
+### On macOS/Linux: permission denied on `.sh` scripts
+
+```bash
+chmod +x ~/.claude/skills/code-analyzer/scripts/*.sh
+```
+
+---
+
+### The skill produces incomplete results
+
+- **No internet access**: Steps 3, 5, 6, 7, 8 require online searches — make sure the agent has internet access
+- **File too large**: files over 800 lines are analyzed with public/exported components only; private components are skipped by design
+- **Snippet without a project path**: dependency versions (Step 1b) are skipped for inline snippets — this is expected behavior
+
+---
+
+### Updating the skill
+
+```bash
+# If installed via git clone
+git -C ~/.claude/skills/code-analyzer pull
+
+# If installed via npx
+npx skills update
+
+# If installed via install.sh
+bash install.sh   # re-run: it detects existing installation and updates it
+```
+
+---
+
+## Skill structure
 
 ```
 code-analyzer/
-├── SKILL.md                                ← istruzioni per l'agente
+├── SKILL.md                                ← agent instructions
+├── install.sh                              ← cross-platform install script
 ├── scripts/
-│   ├── init_report_dir.sh                  ← crea la report dir timestampata
-│   ├── extract_requirements_python.sh      ← estrae dipendenze dal venv Python
-│   └── extract_requirements_typescript.sh  ← estrae dipendenze da node_modules
+│   ├── init_report_dir.js                  ← creates the timestamped report directory (cross-platform)
+│   ├── extract_requirements_python.js      ← extracts Python venv dependencies (cross-platform)
+│   ├── extract_requirements_typescript.js  ← extracts node_modules dependencies (cross-platform)
+│   ├── init_report_dir.sh                  ← bash version (macOS/Linux)
+│   ├── extract_requirements_python.sh      ← bash version (macOS/Linux)
+│   └── extract_requirements_typescript.sh  ← bash version (macOS/Linux)
 └── references/
-    ├── general.md                          ← pattern e anti-pattern multi-linguaggio
-    ├── python.md                           ← PEP, convenzioni, librerie comuni
-    └── javascript.md                       ← ES versioni, npm, TypeScript, checklist async
+    ├── general.md                          ← multi-language patterns and anti-patterns
+    ├── python.md                           ← PEP guidelines, conventions, common libraries
+    └── javascript.md                       ← ES versions, npm, TypeScript, async checklist
 ```
 
 ---
 
-## Licenza
+## License
 
 MIT

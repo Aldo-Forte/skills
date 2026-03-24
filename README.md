@@ -5,6 +5,16 @@
 Skill per agenti AI di coding che analizza in profondità qualsiasi file sorgente o snippet di codice. Spiega cosa fa il codice, documenta ogni funzione, rileva bug, verifica le dipendenze su internet, genera diagrammi UML e schemi di database, e produce metriche di qualità — tutto salvato automaticamente in una directory con timestamp.
 
 ---
+## Installazione
+
+### Metodo rapido (npx)
+npx skills add Aldo-Forte/code-analyzer --all
+
+### Git clone (con aggiornamenti automatici)
+git clone https://github.com/Aldo-Forte/code-analyzer ~/.claude/skills/code-analyzer
+chmod +x ~/.claude/skills/code-analyzer/scripts/*.sh
+
+---
 
 ## Output prodotti
 

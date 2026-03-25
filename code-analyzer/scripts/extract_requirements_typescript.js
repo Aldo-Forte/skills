@@ -108,7 +108,7 @@ if (hasNodeModules) {
   const hasYarnLock = fs.existsSync(path.join(projectDir, 'yarn.lock'));
   const hasPnpmLock = fs.existsSync(path.join(projectDir, 'pnpm-lock.yaml'));
 
-  const npmCheck = spawnSync('npm', ['--version'], { encoding: 'utf8', shell: true });
+  const npmCheck = spawnSync('npm', ['--version'], { encoding: 'utf8' });
   const hasNpm   = npmCheck.status === 0;
 
   if (hasNpm) {
@@ -116,30 +116,30 @@ if (hasNodeModules) {
     const result = spawnSync(
       'npm',
       ['list', '--depth=0', '--prefix', projectDir],
-      { encoding: 'utf8', shell: true, stdio: ['ignore', 'pipe', 'ignore'] }
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
     );
     const npmOut = (result.stdout || '').trim();
     output += npmOut
       ? npmOut + '\n'
       : '(npm list produced no useful output — peer deps may be missing)\n';
   } else if (hasYarnLock) {
-    const yarnVer   = spawnSync('yarn', ['--version'], { encoding: 'utf8', shell: true });
+    const yarnVer   = spawnSync('yarn', ['--version'], { encoding: 'utf8' });
     const yarnMajor = yarnVer.status === 0
       ? parseInt((yarnVer.stdout || '1').trim().split('.')[0], 10) : 1;
     const yarnArgs  = yarnMajor >= 2 ? ['workspaces', 'list'] : ['list', '--depth=0'];
     const result    = spawnSync('yarn', ['--cwd', projectDir, ...yarnArgs], {
-      encoding: 'utf8', shell: true, stdio: ['ignore', 'pipe', 'ignore'],
+      encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
     });
     output += result.stdout ? result.stdout.trim() + '\n' : '(yarn list returned errors)\n';
   } else if (hasPnpmLock) {
     const result = spawnSync('pnpm', ['--dir', projectDir, 'list', '--depth=0'], {
-      encoding: 'utf8', shell: true, stdio: ['ignore', 'pipe', 'ignore'],
+      encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
     });
     if (result.stdout && result.stdout.trim()) {
       output += result.stdout.trim() + '\n';
     } else {
       const result2 = spawnSync('pnpm', ['--dir', projectDir, 'list'], {
-        encoding: 'utf8', shell: true, stdio: ['ignore', 'pipe', 'ignore'],
+        encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
       });
       output += result2.stdout ? result2.stdout.trim() + '\n' : '(pnpm list returned errors)\n';
     }

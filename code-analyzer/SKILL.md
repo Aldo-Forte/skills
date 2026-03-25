@@ -14,6 +14,8 @@ updated: ""
 
 > **Version**: 1.5.0 | **Author**: *(see frontmatter)* | **License**: MIT
 
+> **IMPORTANT — Language rule**: ALL output from this skill MUST be in English. Every report, every message, every explanation — always in plain, clear English. This applies regardless of the language the user writes in. Never switch to another language.
+
 Skill for deep analysis of source code in any language.
 Accepts both snippets pasted in the prompt and file paths on disk.
 
